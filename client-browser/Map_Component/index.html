@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>VEHICLE NAVIGATION SYSTEM</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" /> -->
+    <link rel="stylesheet" href="JavaScript/leaflet-routing-machine.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <link rel="stylesheet" href="styles/index.css" />
+    <link rel="stylesheet" href="JavaScript/L.Control.Locate.min.css" />
+</head>
+<body>
+    <div id="map" class="map"></div>
+	<div class="controls">
+		<button id="track">Start Tracking</button>
+        <label for="interval-input">Tracking Interval (ms):</label>
+        <input type="number" id="interval-input" value="1000" min="100" step="100">
+        <button id="download-btn">Download CSV</button>
+    </div>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <!-- <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script> -->
+    <script src="JavaScript/leaflet-routing-machine.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <script src="JavaScript/config.js"></script>
+    <script src="JavaScript/index.js"></script>
+    <script src="JavaScript/L.Control.Locate.js" charset="utf-8"></script>
+    <script>
+        function enableDownloadButton() {
+            document.getElementById('download-btn').removeAttribute('disabled');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{
+  "name": "edu.vns",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SEI40E/VNSP.git"
+  },
+  "keywords": [
+    "vehicle",
+    "navigation",
+    "software"
+  ],
+  "author": "class of spring 2024 in SW in Ind 4.0 Ecosystems\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[C\u001b[C\u001b[C",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SEI40E/VNSP/issues"
+  },
+  "homepage": "https://github.com/SEI40E/VNSP#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "http-server": "^14.1.1"
+  }
+}
