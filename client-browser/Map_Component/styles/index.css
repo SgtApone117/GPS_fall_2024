@@ -1,0 +1,85 @@
+html {
+    font-family: sans-serif;
+    font-size: 11pt;
+}
+
+.map {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.results {
+    background-color: white;
+    opacity: 0.8;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 320px;
+    height: 480px;
+    overflow-y: scroll;
+}
+
+/* Add button styling here */
+#download-btn {
+    position: fixed;
+    bottom: 20px;  /* 20px from the bottom of the screen */
+    right: 20px;   /* 20px from the right of the screen */
+    padding: 10px 20px;
+    background-color: #28a745; /* Green background */
+    color: white;   /* White text */
+    border: none;   /* No border */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 16px;
+    cursor: pointer; /* Mouse pointer on hover */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Add a subtle shadow */
+    z-index: 9999; /* Ensures the button is above other content */
+	pointer-events: auto; /* Ensures that pointer events are enabled */
+}
+/* Button hover effect */
+#download-btn:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+.controls {
+    position: fixed;
+    bottom: 70px; /* Adjust position above the button */
+    right: 20px; /* Align to the right */
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+    padding: 10px;
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Shadow for depth */
+    z-index: 9999; /* Ensure it appears above the map */
+}
+
+.controls label {
+    margin-right: 5px; /* Space between label and input */
+}
+
+.controls input {
+    width: 80px; /* Fixed width for the input */
+    padding: 5px; /* Padding for input */
+    border: 1px solid #ccc; /* Border style */
+    border-radius: 4px; /* Rounded corners */
+    margin-right: 5px; /* Space between input and button */
+}
+#track {
+    position: fixed;
+    bottom: 120px;  /* 20px from the bottom of the screen */
+    right: 20px;   /* 20px from the right of the screen */
+    padding: 10px 20px;
+    background-color: #28a745; /* Green background */
+    color: white;   /* White text */
+    border: none;   /* No border */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 16px;
+    cursor: pointer; /* Mouse pointer on hover */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Add a subtle shadow */
+    z-index: 9999; /* Ensures the button is above other content */
+	pointer-events: auto; /* Ensures that pointer events are enabled */
+}
+/* Button hover effect */
+#track:hover {
+    background-color: #218838; /* Darker green on hover */
+}
