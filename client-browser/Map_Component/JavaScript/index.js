@@ -1,5 +1,5 @@
 var map = L.map('map').setView([37.978977321661155, -121.30170588862478], 16);
-
+var stop;
 var marker_gps;
 L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -38,6 +38,7 @@ openDatabase();
 var positionInterval; // Variable to store interval ID
 var defaultInterval = 1000; // Default interval value
 var intervalInput = document.getElementById('interval-input');
+let lastPos = null;//keep track to unecessary updates
 intervalInput.addEventListener('change', startTracking); // Restart tracking when the interval input changes
 
 // Define the getPosition function outside of onLocationFound
@@ -45,29 +46,30 @@ function getPos(position) {
     var lat = position.coords.latitude;
     var long = position.coords.longitude;
     var accuracy = position.coords.accuracy;
+    if(lastPos===null || lastPos.latitude!==lat&&lastPos.longitude!==long){
+        var userAgent = navigator.userAgent;
+        var browserDetails = parseUserAgent(userAgent);
+        console.log("Your coordinate is: Latitude: " + lat + " Long: " + long + " Accuracy: " + accuracy);
+        console.log("Browser details:", browserDetails);
+        lastPos = {
+            latitude: lat,
+            longitude: long
+        };
+        storeData(lat, long, accuracy, browserDetails);
+    }
+    else{
 
-    if (marker_gps) {
-        map.removeLayer(marker_gps);
     }
 
-    marker_gps = L.marker([lat, long], { icon: taxiIcon });
-    L.featureGroup([marker_gps]).addTo(map);
-
     // Extract browser and version information from user agent
-    var userAgent = navigator.userAgent;
-    var browserDetails = parseUserAgent(userAgent);
-
-    console.log("Your coordinate is: Lat: " + lat + " Long: " + long + " Accuracy: " + accuracy);
-    console.log("Browser details:", browserDetails);
-
-    storeData(lat, long, browserDetails);
+    
 }
 
 function onLocationFound(e) {
     var geocoder = L.Control.Geocoder.nominatim();
     console.log(e.latlng.lng);
-    var marker = L.marker([0,0], {icon: taxiIcon}).addTo(map);
-    var control = L.Routing.control(L.extend(window.lrmConfig, {
+    L.marker([0,0], {icon: taxiIcon}).addTo(map);
+    L.Routing.control(L.extend(window.lrmConfig, {
         waypoints: [
             L.latLng(e.latlng.lat,e.latlng.lng)
         ],
@@ -91,8 +93,8 @@ function onLocationFound(e) {
             console.log("Your browser doesn't support geolocation feature!")
         } else {
             setInterval(() => {
-                navigator.geolocation.getCurrentPosition(getPosition)
-            }, 1000);
+                navigator.geolocation.getCurrentPosition(updatePosition)
+            }, positionInterval);
         }
         // e.routes[0].coordinates.forEach(function(coord, index) {
         // 	setTimeout(() => {
@@ -100,14 +102,14 @@ function onLocationFound(e) {
         // 	},100 * index)
         // })
     });
-    var marker_gps, circle;
+    var marker_gps;
     
-    function getPosition(position){
+    function updatePosition(position){
         // console.log(position)
         
         var lat = position.coords.latitude
         var long = position.coords.longitude
-        var accuracy = position.coords.accuracy
+
         if(marker_gps) {
             console.log('removing marker');
             map.removeLayer(marker_gps)
@@ -121,19 +123,30 @@ function onLocationFound(e) {
     
         //map.fitBounds(featureGroup.getBounds())
     
-        console.log("Your coordinate is: Lat: "+ lat +" Long: "+ long+ " Accuracy: "+ accuracy)
+        // console.log("Your coordinate is: Lat: "+ lat +" Long: "+ long+ " Accuracy: "+ accuracy)
     }
-}    
+}
 
 function startTracking() {
     clearInterval(positionInterval); 
+    stop=false;
     var intervalValue = parseInt(intervalInput.value) || defaultInterval;
     positionInterval = setInterval(() => {
-        navigator.geolocation.getCurrentPosition(getPos);
+        if (!stop) {
+            navigator.geolocation.getCurrentPosition(getPos, error => {
+                console.error('Geolocation error: ', error);
+            });
+        } else {
+            clearInterval(positionInterval);
+        }
     }, intervalValue);
 }
 
-function storeData(lat, long, browserDetails) {
+function stopTracking() {
+    stop=true;
+}
+
+function storeData(lat, long, accuracy, browserDetails) {
     var transaction = db.transaction(["gpsData"], "readwrite");
     var objectStore = transaction.objectStore("gpsData");
 
@@ -143,8 +156,10 @@ function storeData(lat, long, browserDetails) {
         timestamp: timestamp,
         latitude: lat,
         longitude: long,
+        accuracy : accuracy,
         browser: browserDetails.browser,
-        version: browserDetails.version
+        version: browserDetails.version,
+        OS: browserDetails.os
     };
 
     var request = objectStore.add(data);
@@ -176,8 +191,45 @@ function parseUserAgent(uaString) {
         browser = 'Edge';
         version = uaString.match(/edg\/([0-9\.]+)/i)[1];
     }
+    var os = "unknown";
+    var clientStrings = [
+        {s:'Windows 10', r:/(Windows 10.0|Windows NT 10.0)/},
+        {s:'Windows 8.1', r:/(Windows 8.1|Windows NT 6.3)/},
+        {s:'Windows 8', r:/(Windows 8|Windows NT 6.2)/},
+        {s:'Windows 7', r:/(Windows 7|Windows NT 6.1)/},
+        {s:'Windows Vista', r:/Windows NT 6.0/},
+        {s:'Windows Server 2003', r:/Windows NT 5.2/},
+        {s:'Windows XP', r:/(Windows NT 5.1|Windows XP)/},
+        {s:'Windows 2000', r:/(Windows NT 5.0|Windows 2000)/},
+        {s:'Windows ME', r:/(Win 9x 4.90|Windows ME)/},
+        {s:'Windows 98', r:/(Windows 98|Win98)/},
+        {s:'Windows 95', r:/(Windows 95|Win95|Windows_95)/},
+        {s:'Windows NT 4.0', r:/(Windows NT 4.0|WinNT4.0|WinNT|Windows NT)/},
+        {s:'Windows CE', r:/Windows CE/},
+        {s:'Windows 3.11', r:/Win16/},
+        {s:'Android', r:/Android/},
+        {s:'Open BSD', r:/OpenBSD/},
+        {s:'Sun OS', r:/SunOS/},
+        {s:'Chrome OS', r:/CrOS/},
+        {s:'Linux', r:/(Linux|X11(?!.*CrOS))/},
+        {s:'iOS', r:/(iPhone|iPad|iPod)/},
+        {s:'Mac OS X', r:/Mac OS X/},
+        {s:'Mac OS', r:/(Mac OS|MacPPC|MacIntel|Mac_PowerPC|Macintosh)/},
+        {s:'QNX', r:/QNX/},
+        {s:'UNIX', r:/UNIX/},
+        {s:'BeOS', r:/BeOS/},
+        {s:'OS/2', r:/OS\/2/},
+        {s:'Search Bot', r:/(nuhk|Googlebot|Yammybot|Openbot|Slurp|MSNBot|Ask Jeeves\/Teoma|ia_archiver)/}
+    ];
+    for (var id in clientStrings) {
+        var cs = clientStrings[id];
+        if (cs.r.test(uaString)) {
+            os = cs.s;
+            break;
+        }
+    }
 
-    return { browser: browser, version: version };
+    return { browser: browser, version: version , os: os};
 }
 
 function convertToCSV(objArray) {
