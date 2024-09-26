@@ -66,7 +66,7 @@ html {
 }
 #track {
     position: fixed;
-    bottom: 120px;  /* 20px from the bottom of the screen */
+    bottom: 175px;  /* 20px from the bottom of the screen */
     right: 20px;   /* 20px from the right of the screen */
     padding: 10px 20px;
     background-color: #28a745; /* Green background */
@@ -79,7 +79,27 @@ html {
     z-index: 9999; /* Ensures the button is above other content */
 	pointer-events: auto; /* Ensures that pointer events are enabled */
 }
-/* Button hover effect */
+
 #track:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+#strack {
+    position: fixed;
+    bottom: 125px;  /* 20px from the bottom of the screen */
+    right: 20px;   /* 20px from the right of the screen */
+    padding: 10px 20px;
+    background-color: #28a745; /* Green background */
+    color: white;   /* White text */
+    border: none;   /* No border */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 16px;
+    cursor: pointer; /* Mouse pointer on hover */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Add a subtle shadow */
+    z-index: 9999; /* Ensures the button is above other content */
+	pointer-events: auto; /* Ensures that pointer events are enabled */
+}
+
+#strack:hover {
     background-color: #218838; /* Darker green on hover */
 }
